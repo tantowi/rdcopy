@@ -40,6 +40,12 @@ changelog:
       - Merge branch
 
 brews:
-  - folder: Formula
-    homepage: https://github.com/appit-online/redis-dumper
+  - homepage: https://github.com/appit-online/redis-dumper
     description: CLI for export/import of redis keys to another redis instance, deletion of keys and dummy key generation.
+    folder: Formula
+    commit_author:
+      name: AppIT
+      email: support@appit-online.de
+    tap:
+      owner: appit-online
+      name: redis-dumper

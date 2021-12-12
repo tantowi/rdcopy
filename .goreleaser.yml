@@ -34,13 +34,11 @@ changelog:
       - '^docs:'
       - '^test:'
       - 'README'
+      - 'release'
       - Merge pull request
       - Merge branch
 
 brews:
-  - github:
-      owner: appit-online
-      name: redis-dumper
-    folder: Formula
+  - folder: Formula
     homepage: https://github.com/appit-online/redis-dumper
     description: CLI for export/import of redis keys to another redis instance, deletion of keys and dummy key generation.

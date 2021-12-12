@@ -36,6 +36,7 @@ changelog:
       - 'README'
       - 'readme'
       - 'release'
+      - 'brew'
       - Merge pull request
       - Merge branch
 

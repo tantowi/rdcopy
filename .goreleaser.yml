@@ -34,6 +34,7 @@ changelog:
       - '^docs:'
       - '^test:'
       - 'README'
+      - 'readme'
       - 'release'
       - Merge pull request
       - Merge branch

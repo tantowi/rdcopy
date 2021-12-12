@@ -18,7 +18,8 @@
   - `go install github.com/appit-online/redis-dumper@latest`
 - Option D
   - Install with Homebrew 
-  - ```brew tap appit-online/redis-dumper \  
+  - ```
+    brew tap appit-online/redis-dumper \  
     https://github.com/appit-online/redis-dumper
     brew install redis-dumper
     ```

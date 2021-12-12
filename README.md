@@ -14,9 +14,6 @@
   - Checkout master and install locally with 
   - `go install`
 - Option C
-  - Install directly from GitHub 
-  - `go install github.com/appit-online/redis-dumper@latest`
-- Option D
   - Install with Homebrew 
   - ```
     brew tap appit-online/redis-dumper https://github.com/appit-online/redis-dumper

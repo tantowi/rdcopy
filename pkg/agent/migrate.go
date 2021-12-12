@@ -53,13 +53,8 @@ Can be provided as just ""<host>:<port>" or in Redis URL format: "redis://[:<pas
 
 		logger.Start(time.Second * time.Duration(logInterval))
 		restorer.Start(ctx, wgRestore, parallelRestores)
-		fmt.Println(123)
-
 		scanner.Start(ctx)
-		fmt.Println(123)
-
 		dumper.Start(ctx, parallelDumps)
-		fmt.Println(456)
 
 		// wait until all channels are closed
 		wgRestore.Wait()

@@ -1,6 +1,5 @@
-# redis-dumper
+# redis-dumper CLI
 
-## CLI to 
 - copy data by key pattern from one redis instance to another (backup/restore)
 - delete keys from redis (e.g by key pattern)
 - generate dummy keys 

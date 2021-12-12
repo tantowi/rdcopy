@@ -8,8 +8,20 @@
 
 ### Installation
 
-- Option a) Download the binary for your platform from the [releases page](https://github.com/appit-online/redis-dumper/releases).
-- Option b) Checkout master and install locally with `go install`
+- Option A 
+  - Download the binary for your platform from the [releases page](https://github.com/appit-online/redis-dumper/releases).
+- Option B
+  - Checkout master and install locally with 
+  - `go install`
+- Option C
+  - Install directly from GitHub 
+  - `go install github.com/appit-online/redis-dumper@latest`
+- Option D
+  - Install with Homebrew 
+  - ```brew tap appit-online/redis-dumper \  
+    https://github.com/appit-online/redis-dumper
+    brew install redis-dumper
+    ```
 
 
 ## Usage
@@ -24,7 +36,7 @@
 redis-dumper migrate <source> <destination> --pattern="prefix:*" --sourcePassword="SourcePassword" --targetPassword="TargetPassword"
 ```
 
-####Other flags:
+#### Other flags:
 ```bash
   --sourceUseTLS bool   "Enable TLS for source Redis" (default true)
   --targetUseTLS bool   "Enable TLS for target Redis" (default true)
@@ -39,7 +51,7 @@ redis-dumper migrate <source> <destination> --pattern="prefix:*" --sourcePasswor
 redis-dumper delete <redis> --pattern="prefix:*" --password="Password" 
 ```
 
-####Other flags:
+#### Other flags:
 ```bash
   --useTLS bool   "Enable TLS" (default true)
   --logInterval int     "Print current status every N seconds" (default 1)
@@ -52,7 +64,7 @@ redis-dumper delete <redis> --pattern="prefix:*" --password="Password"
 redis-dumper generate <redis> --password="Password" 
 ```
 
-####Other flags:
+#### Other flags:
 ```bash
   --useTLS bool   "Enable TLS" (default true)
   --prefixes []string   "List of prefixes for generated keys" (default {"mykey:", "testkey:"})
@@ -60,17 +72,17 @@ redis-dumper generate <redis> --password="Password"
   --entryCount int     "Iteration count to perform" (default 1)
 ```
 
-### Migration in Detail
+### Migration Job Details
 
-####Scanning
+#### Scanning
 Is performed with a single goroutine, scanned keys are sent to channel
 
-####DUMPING
+#### DUMPING
 X export goroutines are consuming keys and perform `DUMP` and `PTTL` as a pipeline command
 
-####Restoring
+#### Restoring
 Results are sent to another channel, where another Y push goroutines are performing `RESTORE`/`REPLACE` command on the destination instance
 
-####Monitoring
+#### Monitoring
 A goroutine outputs status every T seconds 
 

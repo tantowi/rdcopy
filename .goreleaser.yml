@@ -1,0 +1,46 @@
+env:
+  - GO111MODULE=on
+  - CGO_ENABLED=0
+builds:
+  - env:
+      - CGO_ENABLED=0
+    main: ./main.go
+    binary: redis-dumper
+archives:
+  - format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    name_template: '{{.ProjectName}}_{{.Version}}_{{.Os}}-{{.Arch}}'
+    replacements:
+      amd64: 64bit
+      386: 32bit
+      arm: ARM
+      arm64: ARM64
+      darwin: macOS
+      linux: Linux
+      windows: Windows
+    files:
+      - Readme.MD
+      - LICENSE
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: '{{ .Tag }}'
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - 'README'
+      - Merge pull request
+      - Merge branch
+
+brews:
+  - github:
+      owner: appit-online
+      name: redis-dumper
+    folder: Formula
+    homepage: https://github.com/appit-online/redis-dumper
+    description: CLI for export/import of redis keys to another redis instance, deletion of keys and dummy key generation.

@@ -6,11 +6,11 @@ import (
 	"sync"
 	"time"
 
+	"github.com/appit-online/redis-dumper/pkg/core/dumper"
+	"github.com/appit-online/redis-dumper/pkg/core/logger"
+	"github.com/appit-online/redis-dumper/pkg/core/restore"
+	"github.com/appit-online/redis-dumper/pkg/core/scanner"
 	"github.com/spf13/cobra"
-	"redis-dumper/pkg/core/dumper"
-	"redis-dumper/pkg/core/logger"
-	"redis-dumper/pkg/core/restore"
-	"redis-dumper/pkg/core/scanner"
 )
 
 var parallelDumps, parallelRestores int

@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/appit-online/redis-dumper/pkg/core/deleter"
+	"github.com/appit-online/redis-dumper/pkg/core/logger"
+	"github.com/appit-online/redis-dumper/pkg/core/scanner"
 	"github.com/spf13/cobra"
-	"redis-dumper/pkg/core/deleter"
-	"redis-dumper/pkg/core/logger"
-	"redis-dumper/pkg/core/scanner"
 )
 
 var parallelDeletes int

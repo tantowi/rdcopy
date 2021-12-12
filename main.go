@@ -16,7 +16,7 @@ limitations under the License.
 package main
 
 import (
-	"redis-dumper/pkg/agent"
+	"github.com/appit-online/redis-dumper/pkg/agent"
 )
 
 func main() {

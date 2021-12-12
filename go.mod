@@ -1,4 +1,4 @@
-module redis-dumper
+module github.com/appit-online/redis-dumper
 
 go 1.17
 

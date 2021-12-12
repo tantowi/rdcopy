@@ -2,8 +2,8 @@ package scanner
 
 import (
 	"context"
+	"github.com/appit-online/redis-dumper/pkg/core/logger"
 	"github.com/mediocregopher/radix/v4"
-	"redis-dumper/pkg/core/logger"
 )
 
 type service struct {

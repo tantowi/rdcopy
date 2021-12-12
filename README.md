@@ -6,7 +6,7 @@ Parallel processing through go routines, copy and delete thousands of key within
 - generate dummy keys 
 
 
-### Installation
+## Installation
 
 - Option A 
   - Download the binary for your platform from the [releases page](https://github.com/appit-online/redis-dumper/releases).
@@ -69,17 +69,17 @@ redis-dumper generate <redis> --password="Password"
   --entryCount int     "Iteration count to perform" (default 1)
 ```
 
-### Migration Job Details
+## Migration Job Details
 
-#### Scanning
+### Scanning
 Is performed with a single goroutine, scanned keys are sent to channel
 
-#### DUMPING
+### DUMPING
 X export goroutines are consuming keys and perform `DUMP` and `PTTL` as a pipeline command
 
-#### Restoring
+### Restoring
 Results are sent to another channel, where another Y push goroutines are performing `RESTORE`/`REPLACE` command on the destination instance
 
-#### Monitoring
+### Monitoring
 A goroutine outputs status every T seconds 
 

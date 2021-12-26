@@ -1,0 +1,39 @@
+{
+  "name": "redis-dumper",
+  "version": "1.0.3",
+  "description": "CLI to migrate redis data from one instance to another,",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "go-npm install",
+    "preuninstall": "go-npm uninstall"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appit-online/redis-dumper.git"
+  },
+  "keywords": [
+    "redis",
+    "redis-dumper",
+    "redis export",
+    "redis import",
+    "command line",
+    "redis dump",
+    "redis backup",
+    "redis restore",
+    "redis-dump"
+  ],
+  "author": "AppIT-Online",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/appit-online/redis-dumper/issues"
+  },
+  "homepage": "https://github.com/appit-online/redis-dumper#readme",
+  "goBinary": {
+    "name": "redis-dumper",
+    "path": "./bin",
+    "url": "https://github.com/appit-online/redis-dumper/releases/download/v{{version}}/redis-dumper_{{version}}_{{platform}}_{{arch}}.tar.gz"
+  },
+  "dependencies": {
+    "go-npm": "^0.1.9"
+  }
+}

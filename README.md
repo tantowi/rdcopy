@@ -19,7 +19,11 @@ Parallel processing through go routines, copy and delete thousands of key within
     brew tap appit-online/redis-dumper https://github.com/appit-online/redis-dumper
     brew install redis-dumper
     ```
-
+- Option D
+  - Install with npm
+  - ```
+    npm i -g redis-dumper
+    ```
 
 ## Usage
 

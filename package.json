@@ -1,6 +1,6 @@
 {
   "name": "redis-dumper",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "CLI to migrate redis data from one instance to another,",
   "main": "index.js",
   "scripts": {
@@ -31,7 +31,7 @@
   "goBinary": {
     "name": "redis-dumper",
     "path": "./bin",
-    "url": "https://github.com/appit-online/redis-dumper/releases/download/v{{version}}/redis-dumper_{{version}}_{{platform}}_{{arch}}.tar.gz"
+    "url": "https://github.com/appit-online/redis-dumper/releases/download/v{{version}}/redis-dumper_{{version}}_{{platform}}-{{arch}}.tar.gz"
   },
   "dependencies": {
     "go-npm": "^0.1.9"

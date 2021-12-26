@@ -1,6 +1,6 @@
 {
   "name": "redis-dumper",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "CLI to migrate redis data from one instance to another, delete data by pattern and create new dummy data in seconds",
   "main": "index.js",
   "scripts": {

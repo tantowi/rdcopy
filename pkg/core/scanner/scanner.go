@@ -2,12 +2,14 @@ package scanner
 
 import (
 	"context"
+	"log"
+
 	"github.com/appit-online/redis-dumper/pkg/core/logger"
-	"github.com/mediocregopher/radix/v4"
+	"github.com/redis/go-redis/v9"
 )
 
 type service struct {
-	client      radix.Client
+	client      *redis.Client
 	options     Options
 	logger      logger.Service
 	dumpChannel chan string
@@ -15,15 +17,15 @@ type service struct {
 
 type Service interface {
 	Start(ctx context.Context)
-	GetScanChannel() <-chan string
+	GetDumperChannel() <-chan string
 }
 
-func CreateService(client radix.Client, options Options, reporter logger.Service) Service {
+func CreateService(client *redis.Client, options Options, reporter logger.Service) Service {
 	return &service{
 		client:      client,
 		options:     options,
 		logger:      reporter,
-		dumpChannel: make(chan string),
+		dumpChannel: make(chan string, options.ParallelDumps),
 	}
 }
 
@@ -31,27 +33,30 @@ func (s *service) Start(ctx context.Context) {
 	go s.scanKeys(ctx)
 }
 
-func (s *service) GetScanChannel() <-chan string {
+func (s *service) GetDumperChannel() <-chan string {
 	return s.dumpChannel
 }
 
 func (s *service) scanKeys(ctx context.Context) {
-	var key string
-	scanConfig := radix.ScannerConfig{
-		Command: "SCAN",
-		Count:   s.options.RedisScanCount,
-	}
-
-	// add key pattern
-	if s.options.SearchPattern != "*" {
-		scanConfig.Pattern = s.options.SearchPattern
-	}
-
 	// start scanning keys
-	redisScanner := scanConfig.New(s.client)
-	for redisScanner.Next(ctx, &key) {
-		s.logger.IncScannedCounter(1)
-		s.dumpChannel <- key
+	var cursor uint64
+	for {
+		var keys []string
+		var err error
+		keys, cursor, err = s.client.Scan(ctx, cursor, s.options.SearchPattern, int64(s.options.RedisScanCount)).Result()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// write keys to dump channel
+		for _, key := range keys {
+			s.dumpChannel <- key
+			s.logger.IncScannedCounter(1)
+		}
+
+		if cursor == 0 {
+			break
+		}
 	}
 
 	close(s.dumpChannel)

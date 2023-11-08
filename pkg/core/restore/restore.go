@@ -2,28 +2,30 @@ package restore
 
 import (
 	"context"
-	"log"
+	"fmt"
 	"sync"
 
 	"github.com/appit-online/redis-dumper/pkg/core/logger"
-	"github.com/mediocregopher/radix/v4"
+	"github.com/redis/go-redis/v9"
 )
 
 type service struct {
-	client      radix.Client
-	logger      logger.Service
-	dumpChannel <-chan Entry
+	client              *redis.Client
+	logger              logger.Service
+	dumpChannel         <-chan Entry
+	replaceExistingKeys bool
 }
 
 type Service interface {
 	Start(ctx context.Context, wg *sync.WaitGroup, number int)
 }
 
-func CreateService(client radix.Client, dumpChannel <-chan Entry, reporter logger.Service) Service {
+func CreateService(client *redis.Client, dumpChannel <-chan Entry, reporter logger.Service, replaceExistingKeys bool) Service {
 	return &service{
-		client:      client,
-		logger:      reporter,
-		dumpChannel: dumpChannel,
+		client:              client,
+		logger:              reporter,
+		dumpChannel:         dumpChannel,
+		replaceExistingKeys: replaceExistingKeys,
 	}
 }
 
@@ -36,13 +38,19 @@ func (p *service) Start(ctx context.Context, wg *sync.WaitGroup, number int) {
 
 func (p *service) restore(ctx context.Context, wg *sync.WaitGroup) {
 	for dump := range p.dumpChannel {
-		p.logger.IncRestoredCounter(1)
 
 		// restore key and replace if still exists
-		err := p.client.Do(ctx, radix.FlatCmd(nil, "RESTORE", dump.Key, dump.Ttl, dump.Value, "REPLACE"))
-		if err != nil {
-			log.Fatal(err)
+		var err error
+		if p.replaceExistingKeys {
+			err = p.client.Do(ctx, "RESTORE", dump.Key, dump.Ttl, dump.Value, "REPLACE").Err()
+		} else {
+			err = p.client.Do(ctx, "RESTORE", dump.Key, dump.Ttl, dump.Value).Err()
 		}
+
+		if err != nil {
+			fmt.Println(fmt.Errorf("could not restore entry: %w", err))
+		}
+		p.logger.IncRestoredCounter(1)
 	}
 
 	wg.Done()

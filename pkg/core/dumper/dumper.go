@@ -2,16 +2,15 @@ package dumper
 
 import (
 	"context"
-	"log"
-	"sync"
-
+	"fmt"
 	"github.com/appit-online/redis-dumper/pkg/core/logger"
 	"github.com/appit-online/redis-dumper/pkg/core/restore"
-	"github.com/mediocregopher/radix/v4"
+	"github.com/redis/go-redis/v9"
+	"sync"
 )
 
 type service struct {
-	client         radix.Client
+	client         *redis.Client
 	logger         logger.Service
 	dumpChannel    <-chan string
 	restoreChannel chan restore.Entry
@@ -19,14 +18,14 @@ type service struct {
 
 type Service interface {
 	Start(ctx context.Context, dumperRoutineCount int)
-	GetDumpChannel() <-chan restore.Entry
+	GetRestorerChannel() <-chan restore.Entry
 }
 
-func CreateService(client radix.Client, dumpChannel <-chan string, reporter logger.Service) Service {
+func CreateService(client *redis.Client, dumpChannel <-chan string, reporter logger.Service, parallelRestores int) Service {
 	return &service{
 		client:         client,
 		logger:         reporter,
-		restoreChannel: make(chan restore.Entry),
+		restoreChannel: make(chan restore.Entry, parallelRestores),
 		dumpChannel:    dumpChannel,
 	}
 }
@@ -44,35 +43,35 @@ func (s *service) Start(ctx context.Context, dumperRoutineCount int) {
 	close(s.restoreChannel)
 }
 
-func (s *service) GetDumpChannel() <-chan restore.Entry {
+func (s *service) GetRestorerChannel() <-chan restore.Entry {
 	return s.restoreChannel
 }
 
 func (s *service) dumpValueRoutine(ctx context.Context, wg *sync.WaitGroup) {
 	for key := range s.dumpChannel {
-		var value string
-		var ttl int
-
 		// dump ttl and value
-		p := radix.NewPipeline()
-		p.Append(radix.Cmd(&ttl, "PTTL", key))
-		p.Append(radix.Cmd(&value, "DUMP", key))
+		pipe := s.client.Pipeline()
+		ttl := pipe.Do(ctx, "PTTL", key)
+		value := pipe.Do(ctx, "DUMP", key)
 
-		if err := s.client.Do(ctx, p); err != nil {
-			log.Fatal(err)
+		_, err := pipe.Exec(ctx)
+		if err != nil {
+			fmt.Println(fmt.Errorf("could not dump entry: %w", err))
+			continue
 		}
 
-		if ttl < 0 {
-			ttl = 0
+		convertedTtl, ok := ttl.Val().(int64)
+		if !ok {
+			convertedTtl = 1000
 		}
 
-		// and value and ttl to channel
-		s.logger.IncDumpedCounter(1)
+		// add value and ttl to channel
 		s.restoreChannel <- restore.Entry{
 			Key:   key,
-			Ttl:   ttl,
-			Value: value,
+			Ttl:   int(convertedTtl),
+			Value: value.Val().(string),
 		}
+		s.logger.IncDumpedCounter(1)
 	}
 
 	wg.Done()

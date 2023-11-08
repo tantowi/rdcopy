@@ -63,7 +63,7 @@ func (r *service) IncRestoredCounter(delta uint64) {
 
 func (r *service) Report() {
 	log.Printf(
-		"Scanned Keys: %d Dumped Entries: %d Restored Entires: %d Deleted Entries: %d after %s\n",
+		"Scanned Keys: %d Dumped Entries: %d Restored Entries: %d Deleted Entries: %d after %s\n",
 		atomic.LoadUint64(&r.scannedCount),
 		atomic.LoadUint64(&r.dumpedCount),
 		atomic.LoadUint64(&r.restoredCount),

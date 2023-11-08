@@ -39,12 +39,11 @@ redis-dumper migrate <source> <destination> --pattern="prefix:*" --sourcePasswor
 
 #### Other flags:
 ```bash
-  --sourceUseTLS bool   "Enable TLS for source Redis" (default true)
-  --targetUseTLS bool   "Enable TLS for target Redis" (default true)
   --logInterval int     "Print current status every N seconds" (default 1)
   --scanCount int       "COUNT parameter for redis SCAN command" (default 1000)
   --parallelDumps int   "Number of parallel dump goroutines" (default 100)
   --pushRoutines int    "Number of parallel restore goroutines" (default 100)
+  --replaceExistingKeys bool    "Existing keys will be replaced" (default false)
 ```
 
 ### 2) Delete keys
@@ -54,7 +53,6 @@ redis-dumper delete <redis> --pattern="prefix:*" --password="Password"
 
 #### Other flags:
 ```bash
-  --useTLS bool           "Enable TLS" (default true)
   --logInterval int       "Print current status every N seconds" (default 1)
   --scanCount int         "COUNT parameter for redis SCAN command" (default 1000)
   --parallelDeletes int   "Number of parallel delete goroutines" (default 100)
@@ -67,7 +65,6 @@ redis-dumper generate <redis> --password="Password"
 
 #### Other flags:
 ```bash
-  --useTLS bool             "Enable TLS" (default true)
   --prefixes []string       "List of prefixes for generated keys" (default {"mykey:", "testkey:"})
   --prefixAmount []string   "Amount of keys to create for each prefix in one iteration" (default {"1", "2"})
   --entryCount int          "Iteration count to perform" (default 1)

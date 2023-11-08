@@ -1,25 +1,33 @@
 package agent
 
 import (
-	"context"
+	"crypto/tls"
 	"log"
+	"net"
 
-	"github.com/mediocregopher/radix/v4"
+	"github.com/redis/go-redis/v9"
 )
 
 var pattern, sourcePassword, targetPassword string
 var scanCount, logInterval int
-var sourceUseTLS, targetUseTLS bool
 
-func createClient(ctx context.Context, password string, redisUrl string, enableTLS bool) radix.Client {
-	scannerDialer := radix.Dialer{
-		AuthPass: password,
-	}
-	ctx = context.WithValue(ctx, "TLSEnabled", enableTLS)
-	client, err := scannerDialer.Dial(ctx, "tcp", redisUrl)
+func createClient(redisAddr string, password string) *redis.Client {
+	hostname, _, err := net.SplitHostPort(redisAddr)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	client := redis.NewClient(&redis.Options{
+		Addr:         redisAddr,
+		Password:     password,
+		ReadTimeout:  0,
+		WriteTimeout: 0,
+		PoolSize:     30,
+		MinIdleConns: 30,
+		TLSConfig: &tls.Config{
+			ServerName: hostname,
+		},
+	})
 
 	return client
 }

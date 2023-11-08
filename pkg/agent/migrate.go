@@ -14,22 +14,26 @@ import (
 )
 
 var parallelDumps, parallelRestores int
+var replaceExistingKeys bool
 
 var migrateCmd = &cobra.Command{
 	Use:   "migrate <source> <destination>",
 	Short: "Migrate keys from source redis instance to destination by given pattern",
 	Long: `Migrate keys from source redis instance to destination by given pattern <source> and <destination> 
 
-Can be provided as just ""<host>:<port>" or in Redis URL format: "redis://[:<password>@]<host>:<port>[/<dbIndex>]"`,
+Can be provided as just ""<host>:<port>""`,
 	Args: cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Start migration")
 		ctx := context.Background()
 
 		// create redis clients
-		scannerClient := createClient(ctx, sourcePassword, args[0], sourceUseTLS)
-		dumperClient := createClient(ctx, sourcePassword, args[0], sourceUseTLS)
-		restorerClient := createClient(ctx, targetPassword, args[1], targetUseTLS)
+		scannerClient := createClient(args[0], sourcePassword)
+		defer scannerClient.Close()
+		dumperClient := createClient(args[0], sourcePassword)
+		defer dumperClient.Close()
+		restorerClient := createClient(args[1], targetPassword)
+		defer restorerClient.Close()
 
 		// init core services
 		logger := logger.CreateService()
@@ -38,15 +42,17 @@ Can be provided as just ""<host>:<port>" or in Redis URL format: "redis://[:<pas
 			scanner.Options{
 				SearchPattern:  pattern,
 				RedisScanCount: scanCount,
+				ParallelDumps:  parallelDumps,
 			},
 			logger,
 		)
 		dumper := dumper.CreateService(
 			dumperClient,
-			scanner.GetScanChannel(),
+			scanner.GetDumperChannel(),
 			logger,
+			parallelRestores,
 		)
-		restorer := restore.CreateService(restorerClient, dumper.GetDumpChannel(), logger)
+		restorer := restore.CreateService(restorerClient, dumper.GetRestorerChannel(), logger, replaceExistingKeys)
 
 		// start processing
 		wgRestore := new(sync.WaitGroup)
@@ -70,11 +76,10 @@ func init() {
 
 	migrateCmd.Flags().StringVar(&pattern, "pattern", "*", "Matching pattern for keys")
 	migrateCmd.Flags().StringVar(&sourcePassword, "sourcePassword", "", "Password of source redis")
-	migrateCmd.Flags().BoolVar(&sourceUseTLS, "sourceUseTLS", true, "Enable TLS for source redis- default true")
 	migrateCmd.Flags().StringVar(&targetPassword, "targetPassword", "", "Password of target redis")
-	migrateCmd.Flags().BoolVar(&targetUseTLS, "targetUseTLS", true, "Enable TLS for target redis- default true")
 	migrateCmd.Flags().IntVar(&scanCount, "scanCount", 1000, "COUNT parameter for redis SCAN command")
 	migrateCmd.Flags().IntVar(&logInterval, "logInterval", 1, "Print current status every N seconds")
 	migrateCmd.Flags().IntVar(&parallelDumps, "parallelDumps", 100, "Number of parallel dump goroutines")
 	migrateCmd.Flags().IntVar(&parallelRestores, "parallelRestores", 100, "Number of parallel restore goroutines")
+	migrateCmd.Flags().BoolVar(&replaceExistingKeys, "replaceExistingKeys", false, "Existing keys will be replaced")
 }

@@ -5,20 +5,20 @@
 class RedisDumper < Formula
   desc "CLI for export/import of redis keys to another redis instance, deletion of keys and dummy key generation."
   homepage "https://github.com/appit-online/redis-dumper"
-  version "2.0.2"
+  version "2.0.4"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/appit-online/redis-dumper/releases/download/v2.0.2/redis-dumper_2.0.2_darwin-arm64.tar.gz"
-      sha256 "345708a8f6d0e4eae99ff12a9b9d7f5544205113439aa8d1afce39729351eee6"
+      url "https://github.com/appit-online/redis-dumper/releases/download/v2.0.4/redis-dumper_2.0.4_darwin-arm64.tar.gz"
+      sha256 "0645f93975730a1e75e1064ab586c5b7dddd5e54cc82867507e99ef98cc56221"
 
       def install
         bin.install "redis-dumper"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/appit-online/redis-dumper/releases/download/v2.0.2/redis-dumper_2.0.2_darwin-amd64.tar.gz"
-      sha256 "ea3b447750651c08b5121125b7ea3c9f4be086792cff10a6415e9f605e5128f7"
+      url "https://github.com/appit-online/redis-dumper/releases/download/v2.0.4/redis-dumper_2.0.4_darwin-amd64.tar.gz"
+      sha256 "26bd81a4b8ae6d3aaa93edd23526b3e73046ced5d0189098cbecb670e93497fe"
 
       def install
         bin.install "redis-dumper"
@@ -28,24 +28,24 @@ class RedisDumper < Formula
 
   on_linux do
     if Hardware::CPU.arm? && !Hardware::CPU.is_64_bit?
-      url "https://github.com/appit-online/redis-dumper/releases/download/v2.0.2/redis-dumper_2.0.2_linux-arm.tar.gz"
-      sha256 "fba061f9b83d0a3111ee02f4abf30932bbfad6178b80ba2921b367c14d83127e"
+      url "https://github.com/appit-online/redis-dumper/releases/download/v2.0.4/redis-dumper_2.0.4_linux-arm.tar.gz"
+      sha256 "1f16e8c81e9ab560b19c6cb903eadb0aab5490cbfda843c617bcaf736cba9f4f"
 
       def install
         bin.install "redis-dumper"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/appit-online/redis-dumper/releases/download/v2.0.2/redis-dumper_2.0.2_linux-arm64.tar.gz"
-      sha256 "45546e16facee0de43f4eda1585803897616763a083b99706fc4c64fad689dda"
+      url "https://github.com/appit-online/redis-dumper/releases/download/v2.0.4/redis-dumper_2.0.4_linux-arm64.tar.gz"
+      sha256 "e4ae259f2254e2741d8783c1ce5ebee1f030140ec08aba4e131d41d5dd5366b1"
 
       def install
         bin.install "redis-dumper"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/appit-online/redis-dumper/releases/download/v2.0.2/redis-dumper_2.0.2_linux-amd64.tar.gz"
-      sha256 "5866326901b86ffc0f2439a61ff5d6b9b78471cc0ced649a4e709ae187a15125"
+      url "https://github.com/appit-online/redis-dumper/releases/download/v2.0.4/redis-dumper_2.0.4_linux-amd64.tar.gz"
+      sha256 "86c538c81c3a64e8686e23916afbb0fa13c276fe5e8fdae29f27c40a17a8c0e6"
 
       def install
         bin.install "redis-dumper"

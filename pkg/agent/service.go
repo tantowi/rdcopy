@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"log"
 	"net"
+	"time"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -20,8 +21,8 @@ func createClient(redisAddr string, password string) *redis.Client {
 	client := redis.NewClient(&redis.Options{
 		Addr:         redisAddr,
 		Password:     password,
-		ReadTimeout:  10,
-		WriteTimeout: 12,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 12 * time.Second,
 		MinIdleConns: 40,
 		PoolSize:     40,
 		TLSConfig: &tls.Config{

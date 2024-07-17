@@ -21,8 +21,8 @@ func createClient(redisAddr string, password string) *redis.Client {
 	client := redis.NewClient(&redis.Options{
 		Addr:         redisAddr,
 		Password:     password,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 12 * time.Second,
+		ReadTimeout:  30 * time.Second,
+		WriteTimeout: 35 * time.Second,
 		MinIdleConns: 40,
 		PoolSize:     40,
 		TLSConfig: &tls.Config{

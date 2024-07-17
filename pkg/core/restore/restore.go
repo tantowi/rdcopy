@@ -38,7 +38,6 @@ func (p *service) Start(ctx context.Context, wg *sync.WaitGroup, number int) {
 
 func (p *service) restore(ctx context.Context, wg *sync.WaitGroup) {
 	for dump := range p.dumpChannel {
-
 		// restore key and replace if still exists
 		var err error
 		if p.replaceExistingKeys {
@@ -49,6 +48,7 @@ func (p *service) restore(ctx context.Context, wg *sync.WaitGroup) {
 
 		if err != nil {
 			fmt.Println(fmt.Errorf("could not restore entry: %w", err))
+			continue
 		}
 		p.logger.IncRestoredCounter(1)
 	}

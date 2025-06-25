@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/appit-online/redis-dumper/pkg/core/deleter"
-	"github.com/appit-online/redis-dumper/pkg/core/logger"
-	"github.com/appit-online/redis-dumper/pkg/core/scanner"
+	"rdcopy/pkg/core/deleter"
+	"rdcopy/pkg/core/logger"
+	"rdcopy/pkg/core/scanner"
+
 	"github.com/spf13/cobra"
 )
 

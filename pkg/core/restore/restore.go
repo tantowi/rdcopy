@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/appit-online/redis-dumper/pkg/core/logger"
+	"rdcopy/pkg/core/logger"
+
 	"github.com/redis/go-redis/v9"
 )
 

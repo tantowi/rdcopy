@@ -3,9 +3,9 @@ package deleter
 import (
 	"context"
 	"fmt"
+	"rdcopy/pkg/core/logger"
 	"sync"
 
-	"github.com/appit-online/redis-dumper/pkg/core/logger"
 	"github.com/redis/go-redis/v9"
 )
 

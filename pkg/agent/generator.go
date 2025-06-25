@@ -7,7 +7,6 @@ import (
 	"log"
 	"math/rand"
 	"strconv"
-	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -33,7 +32,7 @@ Url can be provided as just "<host>:<port>""`,
 		fmt.Println("Generated random values: ", args[0])
 		generatorClient := createClient(args[0], sourcePassword)
 
-		rand.Seed(time.Now().UTC().UnixNano())
+		//rand.Seed(time.Now().UTC().UnixNano())
 		for j := 0; j < entryCount; j++ {
 			for prefix, number := range randomMap {
 				for i := 0; i < number; i++ {

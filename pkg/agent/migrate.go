@@ -6,10 +6,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/appit-online/redis-dumper/pkg/core/dumper"
-	"github.com/appit-online/redis-dumper/pkg/core/logger"
-	"github.com/appit-online/redis-dumper/pkg/core/restore"
-	"github.com/appit-online/redis-dumper/pkg/core/scanner"
+	"rdcopy/pkg/core/dumper"
+	"rdcopy/pkg/core/logger"
+	"rdcopy/pkg/core/restore"
+	"rdcopy/pkg/core/scanner"
+
 	"github.com/spf13/cobra"
 )
 

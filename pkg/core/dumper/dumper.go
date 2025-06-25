@@ -3,10 +3,11 @@ package dumper
 import (
 	"context"
 	"fmt"
-	"github.com/appit-online/redis-dumper/pkg/core/logger"
-	"github.com/appit-online/redis-dumper/pkg/core/restore"
-	"github.com/redis/go-redis/v9"
+	"rdcopy/pkg/core/logger"
+	"rdcopy/pkg/core/restore"
 	"sync"
+
+	"github.com/redis/go-redis/v9"
 )
 
 type service struct {

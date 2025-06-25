@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,7 +27,7 @@ var cfgFile string
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:   "redis-dumper",
+	Use:   "rdcopy",
 	Short: "CLI to execute different redis operations in parallel",
 	Long: `CLI to migrate redis data from one instance to another,
 delete data by pattern and create new dummy data in seconds`,
@@ -59,10 +59,10 @@ func initConfig() {
 		home, err := os.UserHomeDir()
 		cobra.CheckErr(err)
 
-		// Search config in home directory with name ".redis-dumper" (without extension).
+		// Search config in home directory with name ".rdcopy" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(".redis-dumper")
+		viper.SetConfigName(".rdcopy")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

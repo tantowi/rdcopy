@@ -1,5 +1,7 @@
-# redis-dumper CLI
-Parallel processing through go routines, copy and delete thousands of key within some minutes
+# rdcopy CLI
+
+Copy or move redis keys from one instance to another
+Process thousand keys per minute using parallel processing through go routines
 
 - copy data by key pattern from one redis instance to another (backup/restore)
 - delete keys from redis (e.g by key pattern)

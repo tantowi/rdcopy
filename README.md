@@ -1,46 +1,28 @@
-# rdcopy CLI
+# rdcopy
 
-Copy or move redis keys from one instance to another
+Command Line App to copy or move redis keys from one instance to another
 
-Process thousand keys per minute using parallel processing through go routines
+Process thousand keys per minute using parallel processing via go routines
 
-- Copy keys by pattern (backup/restore)
-- Delete keys by pattern
-- generate dummy keys 
 
 ## Installation
 
-- Option A 
-  - Download the binary for your platform from the [releases page](https://github.com/appit-online/redis-dumper/releases).
-- Option B
-  - Checkout master and install locally with 
-  - `go install`
-- Option C
-  - Install with Homebrew 
-  - ```
-    brew tap appit-online/redis-dumper https://github.com/appit-online/redis-dumper
-    brew install redis-dumper
-    ```
-- Option D
-  - Install with npm
-  - ```
-    npm i -g redis-dumper
-    ```
-
-## Usage
+- Checkout master
+- run `go install`
 
 
-*Source*, *destination* - can be provided as just `<host>:<port>` or in Redis URL format: `redis://[:<password>@]<host>:<port>[/<dbIndex>]`
-*Pattern* - can be glob-style pattern supported by [Redis SCAN](https://redis.io/commands/scan) command.
-
-
-### 1) Migrate - Export/Import keys
-```bash
-redis-dumper migrate <source> <destination> --pattern="prefix:*" --sourcePassword="SourcePassword" --targetPassword="TargetPassword"
+## Migrate command
+```
+rdcopy migrate <source> <destination> --pattern="*" --sourcePassword="SourcePassword" --targetPassword="TargetPassword"
 ```
 
+*Source*, *destination* - can be simple `<host>:<port>` or full URL format: `redis://[:<password>@]<host>:<port>[/<dbIndex>]`
+
+*Pattern* - can be glob-style pattern supported by [Redis SCAN](https://redis.io/commands/scan) command.
+
 #### Other flags:
-```bash
+
+```
   --logInterval int     "Print current status every N seconds" (default 1)
   --scanCount int       "COUNT parameter for redis SCAN command" (default 1000)
   --parallelDumps int   "Number of parallel dump goroutines" (default 100)
@@ -48,41 +30,39 @@ redis-dumper migrate <source> <destination> --pattern="prefix:*" --sourcePasswor
   --replaceExistingKeys bool    "Existing keys will be replaced" (default false)
 ```
 
-### 2) Delete keys
-```bash
-redis-dumper delete <redis> --pattern="prefix:*" --password="Password" 
+## Delete command
+
+```
+rdcopy delete <source> --pattern="prefix:*" --password="Password" 
 ```
 
 #### Other flags:
-```bash
+```
   --logInterval int       "Print current status every N seconds" (default 1)
   --scanCount int         "COUNT parameter for redis SCAN command" (default 1000)
   --parallelDeletes int   "Number of parallel delete goroutines" (default 100)
 ```
 
-### 3) Generate keys
-```bash
-redis-dumper generate <redis> --password="Password" 
+### Generate command
+
+```
+rdcopy generate <source> --password="Password" 
 ```
 
 #### Other flags:
-```bash
+```
   --prefixes []string       "List of prefixes for generated keys" (default {"mykey:", "testkey:"})
   --prefixAmount []string   "Amount of keys to create for each prefix in one iteration" (default {"1", "2"})
   --entryCount int          "Iteration count to perform" (default 1)
 ```
 
-## Migration Job Details
+## Notes
 
-### Scanning
-Is performed with a single goroutine, scanned keys are sent to channel
+- Scan: Scanning is performed with a single goroutine, scanned keys are sent to channel
 
-### DUMPING
-X export goroutines are consuming keys and perform `DUMP` and `PTTL` as a pipeline command
+- Dump: X export goroutines are consuming keys and perform `DUMP` and `PTTL` as a pipeline command
 
-### Restoring
-Results are sent to another channel, where another Y push goroutines are performing `RESTORE`/`REPLACE` command on the destination instance
+- Restore: Results are sent to another channel, where another Y push goroutines are performing `RESTORE`/`REPLACE` command on the destination instance
 
-### Monitoring
-A goroutine outputs status every T seconds 
+- Monitor: A goroutine outputs status every T seconds 
 

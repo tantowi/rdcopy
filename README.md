@@ -1,12 +1,12 @@
 # rdcopy CLI
 
 Copy or move redis keys from one instance to another
+
 Process thousand keys per minute using parallel processing through go routines
 
-- copy data by key pattern from one redis instance to another (backup/restore)
-- delete keys from redis (e.g by key pattern)
+- Copy keys by pattern (backup/restore)
+- Delete keys by pattern
 - generate dummy keys 
-
 
 ## Installation
 

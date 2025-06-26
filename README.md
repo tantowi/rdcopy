@@ -19,14 +19,15 @@ Process thousand keys per minute using parallel processing via go routines
 
 6. Compile
    
-   `go build -v
+   `go build -v`
 
 8. Run the app
    
-   `./rdcopy
+   `./rdcopy`
    
 
 ## Migrate command
+
 ```
 rdcopy migrate <source> <destination> --pattern="*" --sourcePassword="SourcePassword" --targetPassword="TargetPassword"
 ```

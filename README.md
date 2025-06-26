@@ -7,9 +7,20 @@ Process thousand keys per minute using parallel processing via go routines
 
 ## Installation
 
-- Checkout master
-- run `go install`
+1. Make sure `golang` is installed
 
+2. Clone the repository
+   `git clone https://github.com/tantowi/rdcopy rdcopy`
+
+3. Change to the directory
+   `cd rdcopy`
+
+4. Compile
+   `go build -v
+
+5. Run the app
+   `./rdcopy
+   
 
 ## Migrate command
 ```

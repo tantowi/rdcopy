@@ -1,1 +1,16 @@
 .idea
+*.exe
+*.dll
+*.log
+*.out
+*.tmp
+*.bak
+*.swp
+*.pid
+*.pid.lock
+*.db
+*.sqlite
+*.sqlite3
+
+rdcopy
+.rdcopy

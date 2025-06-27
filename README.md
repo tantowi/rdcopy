@@ -31,29 +31,26 @@ Process thousand keys per minute using parallel processing via go routines
 ### Usage
 
 ```
-  rdcopy migrate <source> <destination> [flags]
+  rdcopy migrate <source> <target> [flags]
 ```
 
 ### Parameters
 
-*Source* : Redis source
+*source* : Source redis instance in url format: `redis://[:<password>@]<host>:<port>[/<dbIndex>]` (`rediss:` scheme for secure connection)
 
-*Destination* : Redis destination
+*target* : Target redis instance in url format: `redis://[:<password>@]<host>:<port>[/<dbIndex>]` (`rediss:` scheme for secure connection)
 
-*Source* and *Destination* can be simple `<host>:<port>` or full URL format: `redis://[:<password>@]<host>:<port>[/<dbIndex>]`
 
 ### Flags:
 
 ```
   -h, --help                    help for migrate
       --logInterval int         Print current status every N seconds (default 1)
-      --parallelDumps int       Number of parallel dump goroutines (default 100)
-      --parallelRestores int    Number of parallel restore goroutines (default 100)
+      --parallelDumps int       Number of parallel dump goroutines (default 10)
+      --parallelRestores int    Number of parallel restore goroutines (default 10)
       --pattern string          Matching pattern for keys (default "*")
-      --replaceExistingKeys     Existing keys will be replaced
+      --overwrite               Overwrite existing keys in target instance
       --scanCount int           COUNT parameter for redis SCAN command (default 1000)
-      --sourcePassword string   Password of source redis
-      --targetPassword string   Password of target redis
 ```
 
 For matching pattern, see [Redis SCAN](https://redis.io/commands/scan) command.
@@ -68,15 +65,14 @@ For matching pattern, see [Redis SCAN](https://redis.io/commands/scan) command.
 
 ### Parameter
 
-*Source* : redis source, can be simple `<host>:<port>` or full URL format: `redis://[:<password>@]<host>:<port>[/<dbIndex>]`
+*source* : Source redis instance in url format: `redis://[:<password>@]<host>:<port>[/<dbIndex>]` (`rediss:` scheme for secure connection)
 
 ### Flags:
 
 ```
   -h, --help                  help for delete
       --logInterval int       Log current status every N seconds (default 1)
-      --parallelDeletes int   Number of parallel delete goroutines (default 100)
-      --password string       Password for redis
+      --parallelDeletes int   Number of parallel delete goroutines (default 10)
       --pattern string        Matching pattern for keys (default "*")
       --scanCount int         COUNT parameter for redis SCAN command (default 1000)
 ```
@@ -94,14 +90,13 @@ rdcopy generate <source> [flags]
 
 ### Parameter
 
-*Source* : redis source, can be simple `<host>:<port>` or full URL format: `redis://[:<password>@]<host>:<port>[/<dbIndex>]`
+*source* : Source redis instance in url format: `redis://[:<password>@]<host>:<port>[/<dbIndex>]` (`rediss:` scheme for secure connection)
 
 ### Flags:
 
 ```
       --entryCount int             Iteration count to perform (default 1)
   -h, --help                       help for generate
-      --password string            Password for redis
       --prefixAmount stringArray   Amount of keys to create for each prefix in one iteration (default [1,2])
       --prefixes stringArray       List of prefixes for generated keys (default [mykey:,testkey:])
 ```

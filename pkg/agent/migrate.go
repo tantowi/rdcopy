@@ -3,6 +3,7 @@ package agent
 import (
 	"context"
 	"fmt"
+	"log"
 	"sync"
 	"time"
 
@@ -15,25 +16,43 @@ import (
 )
 
 var parallelDumps, parallelRestores int
-var replaceExistingKeys bool
+var overwrite bool
 
 var migrateCmd = &cobra.Command{
-	Use:   "migrate <source> <destination>",
-	Short: "Migrate keys from source redis instance to destination by given pattern",
-	Long: `Migrate keys from source redis instance to destination by given pattern <source> and <destination> 
-
-Can be provided as just ""<host>:<port>""`,
-	Args: cobra.MinimumNArgs(2),
+	Use:   "migrate <source> <target>",
+	Short: "Migrate keys from source instance to target instance by given pattern",
+	Long:  "Migrate keys from source instance to target instance by given pattern",
+	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Start migration")
 		ctx := context.Background()
 
 		// create redis clients
-		scannerClient := createClient(args[0], sourcePassword)
+		scannerClient, err := createClient(args[0])
+		if err != nil {
+			fmt.Println("Error creating scanner client")
+			log.Fatal(err)
+			return
+		}
+
 		defer scannerClient.Close()
-		dumperClient := createClient(args[0], sourcePassword)
+
+		dumperClient, err := createClient(args[0])
+		if err != nil {
+			fmt.Println("Error creating dumper client")
+			log.Fatal(err)
+			return
+		}
+
 		defer dumperClient.Close()
-		restorerClient := createClient(args[1], targetPassword)
+
+		restorerClient, err := createClient(args[1])
+		if err != nil {
+			fmt.Println("Error creating restorer client")
+			log.Fatal(err)
+			return
+		}
+
 		defer restorerClient.Close()
 
 		// init core services
@@ -53,7 +72,7 @@ Can be provided as just ""<host>:<port>""`,
 			logger,
 			parallelRestores,
 		)
-		restorer := restore.CreateService(restorerClient, dumper.GetRestorerChannel(), logger, replaceExistingKeys)
+		restorer := restore.CreateService(restorerClient, dumper.GetRestorerChannel(), logger, overwrite)
 
 		// start processing
 		wgRestore := new(sync.WaitGroup)
@@ -76,11 +95,9 @@ func init() {
 	RootCmd.AddCommand(migrateCmd)
 
 	migrateCmd.Flags().StringVar(&pattern, "pattern", "*", "Matching pattern for keys")
-	migrateCmd.Flags().StringVar(&sourcePassword, "sourcePassword", "", "Password of source redis")
-	migrateCmd.Flags().StringVar(&targetPassword, "targetPassword", "", "Password of target redis")
 	migrateCmd.Flags().IntVar(&scanCount, "scanCount", 1000, "COUNT parameter for redis SCAN command")
 	migrateCmd.Flags().IntVar(&logInterval, "logInterval", 1, "Print current status every N seconds")
-	migrateCmd.Flags().IntVar(&parallelDumps, "parallelDumps", 100, "Number of parallel dump goroutines")
-	migrateCmd.Flags().IntVar(&parallelRestores, "parallelRestores", 100, "Number of parallel restore goroutines")
-	migrateCmd.Flags().BoolVar(&replaceExistingKeys, "replaceExistingKeys", false, "Existing keys will be replaced")
+	migrateCmd.Flags().IntVar(&parallelDumps, "parallelDumps", 10, "Number of parallel dump goroutines")
+	migrateCmd.Flags().IntVar(&parallelRestores, "parallelRestores", 10, "Number of parallel restore goroutines")
+	migrateCmd.Flags().BoolVar(&overwrite, "overwrite", false, "Overwrite existing keys in target instance")
 }

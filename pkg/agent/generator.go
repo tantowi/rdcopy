@@ -15,11 +15,10 @@ var keyPrefix, prefixAmount []string
 var entryCount int
 
 var generatorCmd = &cobra.Command{
-	Use:   "generate <redis>",
+	Use:   "generate <source>",
 	Short: "Create random entries in redis instance",
-	Long: `Create random entries in redis instance
-Url can be provided as just "<host>:<port>""`,
-	Args: cobra.MinimumNArgs(1),
+	Long:  "Create random entries in redis instance",
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Start generating keys")
 		ctx := context.Background()
@@ -30,7 +29,12 @@ Url can be provided as just "<host>:<port>""`,
 		}
 
 		fmt.Println("Generated random values: ", args[0])
-		generatorClient := createClient(args[0], sourcePassword)
+		generatorClient, err := createClient(args[0])
+		if err != nil {
+			fmt.Println("Error creating generator client")
+			log.Fatal(err)
+			return
+		}
 
 		//rand.Seed(time.Now().UTC().UnixNano())
 		for j := 0; j < entryCount; j++ {
@@ -75,7 +79,6 @@ func createRandomMap(prefix []string, prefixAmount []string) (map[string]int, er
 func init() {
 	RootCmd.AddCommand(generatorCmd)
 
-	generatorCmd.Flags().StringVar(&sourcePassword, "password", "", "Password for redis")
 	generatorCmd.Flags().StringArrayVar(&keyPrefix, "prefixes", []string{"mykey:", "testkey:"}, "List of prefixes for generated keys")
 	generatorCmd.Flags().StringArrayVar(&prefixAmount, "prefixAmount", []string{"1", "2"}, "Amount of keys to create for each prefix in one iteration")
 	generatorCmd.Flags().IntVar(&entryCount, "entryCount", 1, "Iteration count to perform")

@@ -3,6 +3,7 @@ package agent
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"rdcopy/pkg/core/deleter"
@@ -15,19 +16,31 @@ import (
 var parallelDeletes int
 
 var deleteCmd = &cobra.Command{
-	Use:   "delete <redis>",
+	Use:   "delete <source>",
 	Short: "Delete keys from redis instance by given pattern",
-	Long: `Delete keys from redis instance by given pattern 
-Url can be provided as just "<host>:<port>""`,
-	Args: cobra.MinimumNArgs(1),
+	Long:  "Delete keys from redis instance by given pattern",
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Start deleting keys")
 		ctx := context.Background()
 
 		// create redis clients
-		scannerClient := createClient(args[0], sourcePassword)
+		scannerClient, err := createClient(args[0])
+		if err != nil {
+			fmt.Println("Error creating scanner client")
+			log.Fatal(err)
+			return
+		}
+
 		defer scannerClient.Close()
-		deleterClient := createClient(args[0], sourcePassword)
+
+		deleterClient, err := createClient(args[0])
+		if err != nil {
+			fmt.Println("Error creating deleter client")
+			log.Fatal(err)
+			return
+		}
+
 		defer deleterClient.Close()
 
 		// init core services
@@ -63,8 +76,7 @@ func init() {
 	RootCmd.AddCommand(deleteCmd)
 
 	deleteCmd.Flags().StringVar(&pattern, "pattern", "*", "Matching pattern for keys")
-	deleteCmd.Flags().StringVar(&sourcePassword, "password", "", "Password for redis")
 	deleteCmd.Flags().IntVar(&scanCount, "scanCount", 1000, "COUNT parameter for redis SCAN command")
 	deleteCmd.Flags().IntVar(&logInterval, "logInterval", 1, "Log current status every N seconds")
-	deleteCmd.Flags().IntVar(&parallelDeletes, "parallelDeletes", 100, "Number of parallel delete goroutines")
+	deleteCmd.Flags().IntVar(&parallelDeletes, "parallelDeletes", 10, "Number of parallel delete goroutines")
 }

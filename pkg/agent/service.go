@@ -60,6 +60,10 @@ func createClient(redisUrl string) (*redis.Client, error) {
 		cdb = "0" // Default Redis database
 	}
 
+	if cdb[0] == '/' {
+		cdb = cdb[1:] // Remove leading slash if present
+	}
+
 	db, err := strconv.Atoi(cdb)
 	if err != nil {
 		return nil, errors.New("Invalid database: " + cdb)

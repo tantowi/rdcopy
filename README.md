@@ -28,22 +28,30 @@ Process thousand keys per minute using parallel processing via go routines
 
 ## Migrate command
 
+### Usage
+
 ```
-rdcopy migrate <source> <destination> --pattern="*" --sourcePassword="SourcePassword" --targetPassword="TargetPassword"
+  rdcopy migrate <source> <destination> [flags]
 ```
+
+### Parameters
 
 *Source*, *destination* - can be simple `<host>:<port>` or full URL format: `redis://[:<password>@]<host>:<port>[/<dbIndex>]`
 
 *Pattern* - can be glob-style pattern supported by [Redis SCAN](https://redis.io/commands/scan) command.
 
-#### Other flags:
+### Flags:
 
 ```
-  --logInterval int     "Print current status every N seconds" (default 1)
-  --scanCount int       "COUNT parameter for redis SCAN command" (default 1000)
-  --parallelDumps int   "Number of parallel dump goroutines" (default 100)
-  --pushRoutines int    "Number of parallel restore goroutines" (default 100)
-  --replaceExistingKeys bool    "Existing keys will be replaced" (default false)
+  -h, --help                    help for migrate
+      --logInterval int         Print current status every N seconds (default 1)
+      --parallelDumps int       Number of parallel dump goroutines (default 100)
+      --parallelRestores int    Number of parallel restore goroutines (default 100)
+      --pattern string          Matching pattern for keys (default "*")
+      --replaceExistingKeys     Existing keys will be replaced
+      --scanCount int           COUNT parameter for redis SCAN command (default 1000)
+      --sourcePassword string   Password of source redis
+      --targetPassword string   Password of target redis
 ```
 
 ## Delete command

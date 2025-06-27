@@ -49,12 +49,14 @@ Process thousand keys per minute using parallel processing via go routines
       --logInterval int         Print current status every N seconds (default 1)
       --parallelDumps int       Number of parallel dump goroutines (default 100)
       --parallelRestores int    Number of parallel restore goroutines (default 100)
-      --pattern string          Matching pattern, supported by [SCAN](https://redis.io/commands/scan) command (default "*")
+      --pattern string          Matching pattern for keys (default "*")
       --replaceExistingKeys     Existing keys will be replaced
       --scanCount int           COUNT parameter for redis SCAN command (default 1000)
       --sourcePassword string   Password of source redis
       --targetPassword string   Password of target redis
 ```
+
+For matching pattern, look at [Redis SCAN](https://redis.io/commands/scan) command.
 
 ## Delete command
 
@@ -71,17 +73,16 @@ Process thousand keys per minute using parallel processing via go routines
 ### Flags:
 
 ```
-Usage:
-  rdcopy delete <redis> [flags]
-
-Flags:
   -h, --help                  help for delete
       --logInterval int       Log current status every N seconds (default 1)
       --parallelDeletes int   Number of parallel delete goroutines (default 100)
       --password string       Password for redis
-      --pattern string        Matching pattern, supported by [SCAN](https://redis.io/commands/scan) command (default "*")
+      --pattern string        Matching pattern for keys (default "*")
       --scanCount int         COUNT parameter for redis SCAN command (default 1000)
 ```
+
+For matching pattern, look at [Redis SCAN](https://redis.io/commands/scan) command.
+
 
 ## Generate command
 

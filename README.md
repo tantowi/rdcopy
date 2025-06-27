@@ -56,7 +56,7 @@ Process thousand keys per minute using parallel processing via go routines
       --targetPassword string   Password of target redis
 ```
 
-For matching pattern, look at [Redis SCAN](https://redis.io/commands/scan) command.
+For matching pattern, see [Redis SCAN](https://redis.io/commands/scan) command.
 
 ## Delete command
 
@@ -81,7 +81,7 @@ For matching pattern, look at [Redis SCAN](https://redis.io/commands/scan) comma
       --scanCount int         COUNT parameter for redis SCAN command (default 1000)
 ```
 
-For matching pattern, look at [Redis SCAN](https://redis.io/commands/scan) command.
+For matching pattern, see [Redis SCAN](https://redis.io/commands/scan) command.
 
 
 ## Generate command

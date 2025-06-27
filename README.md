@@ -36,9 +36,11 @@ Process thousand keys per minute using parallel processing via go routines
 
 ### Parameters
 
-*Source*, *destination* - can be simple `<host>:<port>` or full URL format: `redis://[:<password>@]<host>:<port>[/<dbIndex>]`
+*Source* : Redis source
 
-*Pattern* - can be glob-style pattern supported by [Redis SCAN](https://redis.io/commands/scan) command.
+*Destination* : Redis destination
+
+*Source* and *Destination* can be simple `<host>:<port>` or full URL format: `redis://[:<password>@]<host>:<port>[/<dbIndex>]`
 
 ### Flags:
 
@@ -47,7 +49,7 @@ Process thousand keys per minute using parallel processing via go routines
       --logInterval int         Print current status every N seconds (default 1)
       --parallelDumps int       Number of parallel dump goroutines (default 100)
       --parallelRestores int    Number of parallel restore goroutines (default 100)
-      --pattern string          Matching pattern for keys (default "*")
+      --pattern string          Matching pattern, supported by [SCAN](https://redis.io/commands/scan) command (default "*")
       --replaceExistingKeys     Existing keys will be replaced
       --scanCount int           COUNT parameter for redis SCAN command (default 1000)
       --sourcePassword string   Password of source redis
@@ -56,28 +58,51 @@ Process thousand keys per minute using parallel processing via go routines
 
 ## Delete command
 
-```
-rdcopy delete <source> --pattern="prefix:*" --password="Password" 
-```
-
-#### Other flags:
-```
-  --logInterval int       "Print current status every N seconds" (default 1)
-  --scanCount int         "COUNT parameter for redis SCAN command" (default 1000)
-  --parallelDeletes int   "Number of parallel delete goroutines" (default 100)
-```
-
-### Generate command
+### Usage
 
 ```
-rdcopy generate <source> --password="Password" 
+  rdcopy delete <source> [flags]
 ```
 
-#### Other flags:
+### Parameter
+
+*Source* : redis source, can be simple `<host>:<port>` or full URL format: `redis://[:<password>@]<host>:<port>[/<dbIndex>]`
+
+### Flags:
+
 ```
-  --prefixes []string       "List of prefixes for generated keys" (default {"mykey:", "testkey:"})
-  --prefixAmount []string   "Amount of keys to create for each prefix in one iteration" (default {"1", "2"})
-  --entryCount int          "Iteration count to perform" (default 1)
+Usage:
+  rdcopy delete <redis> [flags]
+
+Flags:
+  -h, --help                  help for delete
+      --logInterval int       Log current status every N seconds (default 1)
+      --parallelDeletes int   Number of parallel delete goroutines (default 100)
+      --password string       Password for redis
+      --pattern string        Matching pattern, supported by [SCAN](https://redis.io/commands/scan) command (default "*")
+      --scanCount int         COUNT parameter for redis SCAN command (default 1000)
+```
+
+## Generate command
+
+### Usage
+
+```
+rdcopy generate <source> [flags]
+```
+
+### Parameter
+
+*Source* : redis source, can be simple `<host>:<port>` or full URL format: `redis://[:<password>@]<host>:<port>[/<dbIndex>]`
+
+### Flags:
+
+```
+      --entryCount int             Iteration count to perform (default 1)
+  -h, --help                       help for generate
+      --password string            Password for redis
+      --prefixAmount stringArray   Amount of keys to create for each prefix in one iteration (default [1,2])
+      --prefixes stringArray       List of prefixes for generated keys (default [mykey:,testkey:])
 ```
 
 ## Notes
